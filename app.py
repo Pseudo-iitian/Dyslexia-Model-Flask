@@ -30,95 +30,94 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/')
 def index():
-    return render_template('index.html', words=[], spoken_text=[])
+  return render_template('index.html', words=[], spoken_text=[])
 
 @app.route('/listen', methods=['POST'])
 def listen():
-    # Get the number of seconds to listen from the request
-    seconds = int(request.form['seconds'])
+  # Get the number of seconds to listen from the request
+  seconds = int(request.form['seconds'])
 
-    # Call the listen_for function
-    text = listen_for(seconds)
+  # Call the listen_for function
+  text = listen_for(seconds)
 
-    # Return the recognized text as JSON
-    # return jsonify({'text': text})
-    return render_template('listenText.html', listen_text=text)
+  # Return the recognized text as JSON
+  # return jsonify({'text': text})
+  return render_template('listenText.html', listen_text=text)
 
 # computer will listen here
 def listen_for(seconds: int):
-    with sr.Microphone() as source:
-        r = sr.Recognizer()
-        print("Recognizing...")
-        audio_data = r.record(source, seconds)
-        text = r.recognize_google(audio_data)
-        print(text)
-        return text
+  with sr.Microphone() as source:
+    r = sr.Recognizer()
+    print("Recognizing...")
+    audio_data = r.record(source, seconds)
+    text = r.recognize_google(audio_data)
+    print(text)
+    return text
 
 # computer will speak alomst 10 words
 # here spoken_words is a global variable now
 @app.route('/speak', methods=['POST'])
 def speak():
-    # Initialize spoken_words as an empty list for each request
-    spoken_words = []
+  # Initialize spoken_words as an empty list for each request
+  spoken_words = []
 
-    # Load the elementary vocabulary from CSV
-    vocabulary = load_elementary_vocabulary()
+  # Load the elementary vocabulary from CSV
+  vocabulary = load_elementary_vocabulary()
 
-    # Select and speak 10 random words
-    for _ in range(10):
-        random_word = random.choice(vocabulary)
-        talk(random_word)
-        spoken_words.append(random_word.lower())  # Convert to lowercase
+  # Select and speak 10 random words
+  for _ in range(10):
+    random_word = random.choice(vocabulary)
+    talk(random_word)
+    spoken_words.append(random_word.lower())  # Convert to lowercase
 
-    # Store spoken_words in the session
-    session['spoken_words'] = spoken_words
+  # Store spoken_words in the session
+  session['spoken_words'] = spoken_words
 
-    # Do not return anything, the function will complete without returning a response
-    return Response(status=204)
+  # Do not return anything, the function will complete without returning a response
+  return Response(status=204)
 
 # loading elementary_voc.csv
 def load_elementary_vocabulary():
-    vocabulary = []
-    with open('/home/abhishek/Documents/TryingModel_Dyslexia/resources/elementary_voc.csv', 'r') as file:
-        reader = csv.reader(file)
-        for row in reader:
-            vocabulary.extend(row)
-    return vocabulary
+  vocabulary = []
+  with open('/home/abhishek/Documents/TryingModel_Dyslexia/resources/elementary_voc.csv', 'r') as file:
+    reader = csv.reader(file)
+    for row in reader:
+        vocabulary.extend(row)
+  return vocabulary
 
 # talk will make speak google assistant speak
 def talk(text: str):
-    # Initialize gTTS and specify language (here English)
-    tts = gTTS(text=text, lang='en')
+  # Initialize gTTS and specify language (here English)
+  tts = gTTS(text=text, lang='en')
 
-    # Save the speech as a temporary file
-    tts.save("temp.mp3")
+  # Save the speech as a temporary file
+  tts.save("temp.mp3")
 
-    # Play the speech using a media player for at least 4 seconds
-    start_time = time.time()
-    os.system("mpg321 temp.mp3")  # Adjust the command for your system if needed
-    elapsed_time = time.time() - start_time
+  # Play the speech using a media player for at least 4 seconds
+  start_time = time.time()
+  os.system("mpg321 temp.mp3")  # Adjust the command for your system if needed
+  elapsed_time = time.time() - start_time
 
-    # Wait for at least 4 seconds
-    if elapsed_time < 4:
-        time.sleep(4 - elapsed_time)
+  # Wait for at least 4 seconds
+  if elapsed_time < 4:
+    time.sleep(4 - elapsed_time)
 
-    # Remove the temporary file
-    os.remove("temp.mp3")
+  # Remove the temporary file
+  os.remove("temp.mp3")
 
 # printing words taken by the user
 @app.route('/submitWords', methods=['POST'])
 def submit_words():
-    # Get the submitted words from the form
-    submitted_words = []
-    for i in range(1, 11):
-        word = request.form.get(f'word{i}', '')
-        submitted_words.append(word)
+  # Get the submitted words from the form
+  submitted_words = []
+  for i in range(1, 11):
+    word = request.form.get(f'word{i}', '')
+    submitted_words.append(word)
 
-    # Get spoken_words from the session
-    spoken_words = session.get('spoken_words', [])
-
-    # Render the template with the submitted words and spoken text
-    return render_template('index.html', words=submitted_words, spoken_text=spoken_words)
+  # Get spoken_words from the session
+  spoken_words = session.get('spoken_words', [])
+  # Render the template with the submitted words and spoken text
+  return render_template('index.html', words=submitted_words, spoken_text=spoken_words)
 
 
 # image to text code starts here
@@ -127,23 +126,23 @@ def submit_words():
 # image to text ke liye
 @app.route('/submit_text', methods=['POST'])
 def submit_text():
-    if request.method == 'POST':
-        user_text = request.form['user_text']
-        print("User submitted text:", user_text)
+  if request.method == 'POST':
+    user_text = request.form['user_text']
+    print("User submitted text:", user_text)
 
-        # Use the user_text as input for get_feature_array
-        feature_array = get_feature_array(user_text)
-        result = score(feature_array)
-        
-        if result[0] == 1:
-            word = "From the tests on this handwriting sample, there is a very slim chance that this person is suffering from dyslexia or dysgraphia"
-            print("From the tests on this handwriting sample, there is a very slim chance that this person is suffering from dyslexia or dysgraphia")
-        else:
-            word = "From the tests on this handwriting sample, there is a very high chance that this person is suffering from dyslexia or dysgraphia"
-            print("From the tests on this handwriting sample, there is a very high chance that this person is suffering from dyslexia or dysgraphia")
+    # Use the user_text as input for get_feature_array
+    feature_array = get_feature_array(user_text)
+    result = score(feature_array)
+    
+    if result[0] == 1:
+      word = "From the tests on this handwriting sample, there is a very slim chance that this person is suffering from dyslexia or dysgraphia"
+      print("From the tests on this handwriting sample, there is a very slim chance that this person is suffering from dyslexia or dysgraphia")
+    else:
+      word = "From the tests on this handwriting sample, there is a very high chance that this person is suffering from dyslexia or dysgraphia"
+      print("From the tests on this handwriting sample, there is a very high chance that this person is suffering from dyslexia or dysgraphia")
 
-        # Render index.html and pass the prediction word
-        return render_template('index.html', prediction=word)
+    # Render index.html and pass the prediction word
+  return render_template('index.html', prediction=word)
 
 def levenshtein(s1, s2):
   if len(s1) < len(s2):
@@ -157,11 +156,11 @@ def levenshtein(s1, s2):
   for i, c1 in enumerate(s1):
     current_row = [i + 1]
     for j, c2 in enumerate(s2):
-      # j+1 instead of j since previous_row and current_row are one character longer
-        insertions = previous_row[j + 1] + 1
-        deletions = current_row[j] + 1       # than s2
-        substitutions = previous_row[j] + (c1 != c2)
-        current_row.append(min(insertions, deletions, substitutions))
+    # j+1 instead of j since previous_row and current_row are one character longer
+      insertions = previous_row[j + 1] + 1
+      deletions = current_row[j] + 1       # than s2
+      substitutions = previous_row[j] + (c1 != c2)
+      current_row.append(min(insertions, deletions, substitutions))
     previous_row = current_row
 
   return previous_row[-1]
@@ -169,8 +168,8 @@ def levenshtein(s1, s2):
 # ***************************************************
 
 def spelling_accuracy(extracted_text):
-    spell_corrected = TextBlob(extracted_text).correct()
-    return ((len(extracted_text) - (levenshtein(extracted_text, spell_corrected)))/(len(extracted_text)+1))*100
+  spell_corrected = TextBlob(extracted_text).correct()
+  return ((len(extracted_text) - (levenshtein(extracted_text, spell_corrected)))/(len(extracted_text)+1))*100
 
 # ***************************************************
 my_tool = language_tool_python.LanguageTool('en-US')
@@ -180,8 +179,7 @@ def gramatical_accuracy(extracted_text):
   correct_text = my_tool.correct(spell_corrected)
   extracted_text_set = set(spell_corrected.split(" "))
   correct_text_set = set(correct_text.split(" "))
-  n = max(len(extracted_text_set - correct_text_set),
-          len(correct_text_set - extracted_text_set))
+  n = max(len(extracted_text_set - correct_text_set),len(correct_text_set - extracted_text_set))
   return ((len(spell_corrected) - n)/(len(spell_corrected)+1))*100
 
 # ****************************************************

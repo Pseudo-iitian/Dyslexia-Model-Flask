@@ -27,45 +27,15 @@ from abydos.phonetic import Soundex, Metaphone, Caverphone, NYSIIS
 
 app = Flask(__name__)
 
-# Initialize spoken_words as an empty list for each session
-# @app.before_request
-# def before_request():
-#   session.setdefault('spoken_words', [])
+@app.route('/next_page')
+def next_page():
+    return render_template('dictation.html')
 
 @app.route('/')
 def index():
   # Clear spoken_words list when accessing the index page
   # session['spoken_words'] = []
   return render_template('index.html', words=[], spoken_text=[])
-
-
-
-# def check_pronounciation(str1 : str , str2: str):
-#     s1 = ipa.convert(str1)
-#     s2 = ipa.convert(str2)
-#     return levenshtein(s1,s2)
-  
-# @app.route('/listen', methods=['POST'])
-# def listen():
-#   # Get the number of seconds to listen from the request
-#   seconds = int(request.form['seconds'])
-
-#   # Call the listen_for function
-#   text = listen_for(seconds)
-
-#   # Return the recognized text as JSON
-#   # return jsonify({'text': text})
-#   return render_template('listenText.html', listen_text=text)
-
-# computer will listen here
-# def listen_for(seconds: int):
-#   with sr.Microphone() as source:
-#     r = sr.Recognizer()
-#     print("Recognizing...")
-#     audio_data = r.record(source, seconds)
-#     text = r.recognize_google(audio_data)
-#     print(text)
-#     return text
 
 # computer will speak alomst 10 words
 # here spoken_words is a global variable now
@@ -129,7 +99,7 @@ def submit_words():
 
   score = levenshtein(spoken_words,submitted_words)
   # Render the template with the submitted words and spoken text
-  return render_template('index.html', words=submitted_words, spoken_text=spoken_words,score=score)
+  return render_template('dictation.html', words=submitted_words, spoken_text=spoken_words,score=score)
 
 
 # image to text code starts here

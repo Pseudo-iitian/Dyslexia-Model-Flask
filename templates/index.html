@@ -1,106 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Speech Recognition</title>
+  <title>Enter Text</title>
+  <link rel="stylesheet" href="../static/styleDication.css">
 </head>
-
 <body>
-  <!-- <h1>Speech Recognition User Speaks</h1>
-  <form action="/listen" method="post">
-    <label for="seconds">Number of seconds to speak (set the timer):</label>
-    <input type="number" id="seconds" name="seconds" required>
-    <button type="submit">You can speak now!</button>
-  </form> -->
-
-  <h1>Write words here and listen by Google Assistant</h1>
-  <!-- Change the input type to 'button' and add an onclick event -->
-  <!-- google assistent will speak here -->
-  <form action="/speak" method="post">
-    <!-- Add a hidden input field to store spoken words -->
-    <button id="speakButton">Make Google Assistant speak</button>
-    <!-- <input type="hidden" id="spokenWords" name="spokenWords"> -->
-  </form>
-
-
-  <h2>Enter 10 words to be spoken</h2>
-  <form action="/submitWords" method="post">
-    <!-- Inputs for each word -->
-    <label for="word1">Word 1:</label>
-    <input type="text" id="word1" name="word1"><br>
-
-    <label for="word2">Word 2:</label>
-    <input type="text" id="word2" name="word2"><br>
-
-    <label for="word3">Word 3:</label>
-    <input type="text" id="word3" name="word3"><br>
-
-    <label for="word4">Word 4:</label>
-    <input type="text" id="word4" name="word4"><br>
-
-    <label for="word5">Word 5:</label>
-    <input type="text" id="word5" name="word5"><br>
-
-    <label for="word6">Word 6:</label>
-    <input type="text" id="word6" name="word6"><br>
-
-    <label for="word7">Word 7:</label>
-    <input type="text" id="word7" name="word7"><br>
-
-    <label for="word8">Word 8:</label>
-    <input type="text" id="word8" name="word8"><br>
-
-    <label for="word9">Word 9:</label>
-    <input type="text" id="word9" name="word9"><br>
-
-    <label for="word10">Word 10:</label>
-    <input type="text" id="word10" name="word10"><br>
-
-    <button type="submit">Submit</button>
-  </form>
-
-
-  <h2>What you wrote:</h2>
-  {% if words %}
-      <p>{{ words }}</p>
-  {% else %}
-      <p>No words submitted yet.</p>
-  {% endif %}
-
-  <!-- Display what Google Assistant said -->
-  <h2>What Google Assistant said:</h2>
-  {% if spoken_text %}
-      <p>{{ spoken_text }}</p>
-  {% else %}
-      <p>No text spoken yet.</p>
-  {% endif %}
-
-  <h2>Score (minimum is better):</h2>
-  {% if score %}
-      <p>{{ score }}</p>
-  {% else %}
-      <p>No text spoken yet.</p>
-  {% endif %}
-
-
-  <!-- add here for form where i input text area by user -->
-
-  <h2>Enter Text:</h2>
-  <p><a href="https://www.imagetotext.io/">Go to this Page, upload Image and copy text from there and paste here</a></p>
-  <form action="/submit_text" method="post">
-      <textarea name="user_text" rows="4" cols="50"></textarea><br><br>
-      <input type="submit" value="Submit">
-  </form>
-  <h2>Our Prediction: </h2>
-  {% if prediction %}
-      <p>{{ prediction }}</p>
-  {% else %}
-      <p>No Prediction Done Yet.</p>
-  {% endif %}
-
-
+  <div class="container">
+    <h1 class="title">Enter Text</h1>
+    <p class="intro">
+      Go to <a href="https://www.imagetotext.io/" target="_blank">this Page</a>, upload Image and copy text from there and paste here
+    </p>
+    <form action="/submit_text" method="post">
+      <label for="user_text">User Text</label>
+      <textarea name="user_text" id="user_text" rows="4" cols="50"></textarea><br><br>
+      <button type="submit">Submit</button>
+    </form>
+    <h2 class="prediction-title">Our Prediction:</h2>
+    {% if prediction %}
+    <p class="prediction">{{ prediction }}</p>
+    {% else %}
+    <p class="prediction">No Prediction Done Yet.</p>
+    {% endif %}
+    <form action="/next_page" method="get">
+      <button type="submit" class="next-button">Next</button>
+    </form>
+  </div>
 </body>
-
 </html>

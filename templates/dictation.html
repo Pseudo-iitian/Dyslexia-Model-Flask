@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speech Recognition</title>
+  <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+  <!-- <h1>Speech Recognition User Speaks</h1>
+  <form action="/listen" method="post">
+    <label for="seconds">Number of seconds to speak (set the timer):</label>
+    <input type="number" id="seconds" name="seconds" required>
+    <button type="submit">You can speak now!</button>
+  </form> -->
+
+  <div class="container">
+    <h1>Write words here and listen by Google Assistant</h1>
+    <!-- Change the input type to 'button' and add an onclick event -->
+    <!-- google assistent will speak here -->
+    <form action="/speak" method="post">
+      <!-- Add a hidden input field to store spoken words -->
+      <button id="speakButton">Make Google Assistant speak</button>
+      <!-- <input type="hidden" id="spokenWords" name="spokenWords"> -->
+    </form>
+
+
+    <h2>Enter 10 words to be spoken</h2>
+    <form action="/submitWords" method="post">
+      <!-- Inputs for each word -->
+      <label for="word1">Word 1:</label>
+      <input type="text" id="word1" name="word1"><br>
+
+      <label for="word2">Word 2:</label>
+      <input type="text" id="word2" name="word2"><br>
+
+      <label for="word3">Word 3:</label>
+      <input type="text" id="word3" name="word3"><br>
+
+      <label for="word4">Word 4:</label>
+      <input type="text" id="word4" name="word4"><br>
+
+      <label for="word5">Word 5:</label>
+      <input type="text" id="word5" name="word5"><br>
+
+      <label for="word6">Word 6:</label>
+      <input type="text" id="word6" name="word6"><br>
+
+      <label for="word7">Word 7:</label>
+      <input type="text" id="word7" name="word7"><br>
+
+      <label for="word8">Word 8:</label>
+      <input type="text" id="word8" name="word8"><br>
+
+      <label for="word9">Word 9:</label>
+      <input type="text" id="word9" name="word9"><br>
+
+      <label for="word10">Word 10:</label>
+      <input type="text" id="word10" name="word10"><br>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <div class="info-section">
+      <h2>What you wrote:</h2>
+      {% if words %}
+      <p>{{ words }}</p>
+      {% else %}
+      <p>No words submitted yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="info-section">
+      <h2>What Google Assistant said:</h2>
+      {% if spoken_text %}
+      <p>{{ spoken_text }}</p>
+      {% else %}
+      <p>No text spoken yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="info-section">
+      <h2>Score (minimum is better):</h2>
+      {% if score %}
+      <p>{{ score }}</p>
+      {% else %}
+      <p>No text spoken yet.</p>
+      {% endif %}
+    </div>
+  </div>
+  </div>  
+
+</body>
+
+</html>

@@ -38,27 +38,34 @@ def index():
   # session['spoken_words'] = []
   return render_template('index.html', words=[], spoken_text=[])
 
-@app.route('/listen', methods=['POST'])
-def listen():
-  # Get the number of seconds to listen from the request
-  seconds = int(request.form['seconds'])
 
-  # Call the listen_for function
-  text = listen_for(seconds)
 
-  # Return the recognized text as JSON
-  # return jsonify({'text': text})
-  return render_template('listenText.html', listen_text=text)
+# def check_pronounciation(str1 : str , str2: str):
+#     s1 = ipa.convert(str1)
+#     s2 = ipa.convert(str2)
+#     return levenshtein(s1,s2)
+  
+# @app.route('/listen', methods=['POST'])
+# def listen():
+#   # Get the number of seconds to listen from the request
+#   seconds = int(request.form['seconds'])
+
+#   # Call the listen_for function
+#   text = listen_for(seconds)
+
+#   # Return the recognized text as JSON
+#   # return jsonify({'text': text})
+#   return render_template('listenText.html', listen_text=text)
 
 # computer will listen here
-def listen_for(seconds: int):
-  with sr.Microphone() as source:
-    r = sr.Recognizer()
-    print("Recognizing...")
-    audio_data = r.record(source, seconds)
-    text = r.recognize_google(audio_data)
-    print(text)
-    return text
+# def listen_for(seconds: int):
+#   with sr.Microphone() as source:
+#     r = sr.Recognizer()
+#     print("Recognizing...")
+#     audio_data = r.record(source, seconds)
+#     text = r.recognize_google(audio_data)
+#     print(text)
+#     return text
 
 # computer will speak alomst 10 words
 # here spoken_words is a global variable now

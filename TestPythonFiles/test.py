@@ -129,7 +129,9 @@ def get_feature_array(path: str):
   # path is the path of image, but i am using text.
   feature_array = []
   # extracted_text = image_to_text(path)
-  extracted_text = 'Oak bill is A grat Scoll fore pepoo!. That hav dislessey ihav bin lernigh A lot mor latle ilovit i thing that wen and \' lev. I wil de,,100 asent so qoo wid but i will be & SAd the teshis unverenis'
+  # *****************************************************************************************
+  extracted_text = 'knowing the time of separation and the activity of the lead-210 solution, the ingrauth Of the bismuth-210 can be calculated. The absolute activity of the reference standards can be calculated from the known activity of the lead-210 solution and the chemical yleld, but this calculation is unneces necessary. Provided the same lead carrier solution is used to prepare and the reference standards For the analyses.'
+  # *****************************************************************************************
   feature_array.append(spelling_accuracy(extracted_text))
   feature_array.append(gramatical_accuracy(extracted_text))
   feature_array.append(percentage_of_corrections(extracted_text))

@@ -76,6 +76,23 @@
   {% else %}
       <p>No text spoken yet.</p>
   {% endif %}
+
+
+  <!-- add here for form where i input text area by user -->
+
+  <h2>Enter Text:</h2>
+  <form action="/submit_text" method="post">
+      <textarea name="user_text" rows="4" cols="50"></textarea><br><br>
+      <input type="submit" value="Submit">
+  </form>
+  <h2>Our Prediction: </h2>
+  {% if prediction %}
+      <p>{{ prediction }}</p>
+  {% else %}
+      <p>No Prediction Done Yet.</p>
+  {% endif %}
+
+
 </body>
 
 </html>

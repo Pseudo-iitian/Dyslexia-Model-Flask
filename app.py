@@ -287,15 +287,15 @@ def score(input):
     var0 = [0.0, 1.0]
   else:
     if input[1] <= 99.1046028137207:
-        var0 = [0.0, 1.0]
+      var0 = [0.0, 1.0]
     else:
       if input[2] <= 2.408450722694397:
         if input[2] <= 1.7936508059501648:
-            var0 = [1.0, 0.0]
+          var0 = [1.0, 0.0]
         else:
-            var0 = [0.0, 1.0]
+          var0 = [0.0, 1.0]
       else:
-            var0 = [1.0, 0.0]
+        var0 = [1.0, 0.0]
   return var0
 
 #image to text code completes here

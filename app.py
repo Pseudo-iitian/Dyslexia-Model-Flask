@@ -259,7 +259,7 @@ def calculate_score(extracted_phonetics, spell_corrected_phonetics):
 
 # def get_feature_array(path: str):
 def get_feature_array(text):
-  # path is the path of image, but i am using text.
+  # path is the path of image, but i am using text.******************************IMAGE****************
   feature_array = []
   # extracted_text = image_to_text(path)
   # *****************************************************************************************
@@ -293,11 +293,11 @@ def score(input):
     else:
       if input[2] <= 2.408450722694397:
         if input[2] <= 1.7936508059501648:
-          var0 = [1.0, 0.0]
+            var0 = [1.0, 0.0]
         else:
-          var0 = [0.0, 1.0]
+            var0 = [0.0, 1.0]
       else:
-        var0 = [1.0, 0.0]
+            var0 = [1.0, 0.0]
   return var0
 
 #image to text code completes here

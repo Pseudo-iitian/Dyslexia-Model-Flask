@@ -26,10 +26,16 @@ from abydos.phonetic import Soundex, Metaphone, Caverphone, NYSIIS
 
 
 app = Flask(__name__)
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
+# Initialize spoken_words as an empty list for each session
+# @app.before_request
+# def before_request():
+#   session.setdefault('spoken_words', [])
 
 @app.route('/')
 def index():
+  # Clear spoken_words list when accessing the index page
+  # session['spoken_words'] = []
   return render_template('index.html', words=[], spoken_text=[])
 
 @app.route('/listen', methods=['POST'])
@@ -56,25 +62,25 @@ def listen_for(seconds: int):
 
 # computer will speak alomst 10 words
 # here spoken_words is a global variable now
+spoken_words = []
 @app.route('/speak', methods=['POST'])
 def speak():
-  # Initialize spoken_words as an empty list for each request
-  spoken_words = []
-
   # Load the elementary vocabulary from CSV
+  global spoken_words
+
+  # Clear the spoken_words list
+  spoken_words.clear()
   vocabulary = load_elementary_vocabulary()
 
   # Select and speak 10 random words
-  for _ in range(10):
+  for _ in range(1,11):  # Only select new words if necessary
     random_word = random.choice(vocabulary)
-    talk(random_word)
     spoken_words.append(random_word.lower())  # Convert to lowercase
-
-  # Store spoken_words in the session
-  session['spoken_words'] = spoken_words
+    talk(random_word)
 
   # Do not return anything, the function will complete without returning a response
   return Response(status=204)
+
 
 # loading elementary_voc.csv
 def load_elementary_vocabulary():
@@ -82,7 +88,7 @@ def load_elementary_vocabulary():
   with open('/home/abhishek/Documents/TryingModel_Dyslexia/resources/elementary_voc.csv', 'r') as file:
     reader = csv.reader(file)
     for row in reader:
-        vocabulary.extend(row)
+      vocabulary.extend(row)
   return vocabulary
 
 # talk will make speak google assistant speak
@@ -110,14 +116,13 @@ def talk(text: str):
 def submit_words():
   # Get the submitted words from the form
   submitted_words = []
-  for i in range(1, 11):
+  for i in range(1,11):
     word = request.form.get(f'word{i}', '')
     submitted_words.append(word)
 
-  # Get spoken_words from the session
-  spoken_words = session.get('spoken_words', [])
+  score = levenshtein(spoken_words,submitted_words)
   # Render the template with the submitted words and spoken text
-  return render_template('index.html', words=submitted_words, spoken_text=spoken_words)
+  return render_template('index.html', words=submitted_words, spoken_text=spoken_words,score=score)
 
 
 # image to text code starts here

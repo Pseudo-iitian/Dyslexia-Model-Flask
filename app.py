@@ -23,6 +23,8 @@ import time
 import eng_to_ipa as ipa
 import requests
 from abydos.phonetic import Soundex, Metaphone, Caverphone, NYSIIS
+import pickle as pkl
+import numpy as np
 
 
 app = Flask(__name__)
@@ -104,6 +106,7 @@ def submit_words():
 
 # image to text code starts here
 
+loaded_model = pkl.load(open("Decision_tree_model.sav", 'rb'))
 
 # image to text ke liye
 @app.route('/submit_text', methods=['POST'])
@@ -113,10 +116,13 @@ def submit_text():
     print("User submitted text:", user_text)
 
     # Use the user_text as input for get_feature_array
-    feature_array = get_feature_array(user_text)
-    result = score(feature_array)
+    features = get_feature_array(user_text)
+    features_array = np.array([features])
+
+    # result = score(feature_array)
+    prediction = loaded_model.predict(features_array)
     
-    if result[0] == 1:
+    if prediction[0] == 0:
       word = "From the tests on this handwriting sample, there is a very slim chance that this person is suffering from dyslexia or dysgraphia"
       print("From the tests on this handwriting sample, there is a very slim chance that this person is suffering from dyslexia or dysgraphia")
     else:
@@ -264,21 +270,23 @@ def generate_csv(folder: str, label: int, csv_name: str):
   pd.DataFrame(arr, columns=["spelling_accuracy", "gramatical_accuracy", " percentage_of_corrections",
                 "percentage_of_phonetic_accuraccy", "presence_of_dyslexia"]).to_csv("test1.csv")
 
-def score(input):
-  if input[0] <= 96.40350723266602:
-    var0 = [0.0, 1.0]
-  else:
-    if input[1] <= 99.1046028137207:
-      var0 = [0.0, 1.0]
-    else:
-      if input[2] <= 2.408450722694397:
-        if input[2] <= 1.7936508059501648:
-          var0 = [1.0, 0.0]
-        else:
-          var0 = [0.0, 1.0]
-      else:
-        var0 = [1.0, 0.0]
-  return var0
+
+
+# def score(input):
+#   if input[0] <= 96.40350723266602:
+#     var0 = [0.0, 1.0]
+#   else:
+#     if input[1] <= 99.1046028137207:
+#       var0 = [0.0, 1.0]
+#     else:
+#       if input[2] <= 2.408450722694397:
+#         if input[2] <= 1.7936508059501648:
+#           var0 = [1.0, 0.0]
+#         else:
+#           var0 = [0.0, 1.0]
+#       else:
+#         var0 = [1.0, 0.0]
+#   return var0
 
 #image to text code completes here
 
